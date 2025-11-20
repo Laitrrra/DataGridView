@@ -87,6 +87,8 @@ namespace DataGridView
             bindingSource.DataSource = tours.Tours;
             dataGridViewTours.DataSource = bindingSource;
 
+            dataGridViewTours.AutoGenerateColumns = true;
+
             dataGridViewTours.Columns["Id"].Visible = false;
             dataGridViewTours.Columns["Direction"].HeaderText = "Направление";
             dataGridViewTours.Columns["DepartureDate"].HeaderText = "Дата вылета";
@@ -95,28 +97,37 @@ namespace DataGridView
             dataGridViewTours.Columns["NumberOfPeople"].HeaderText = "Количество отдыхающих";
             dataGridViewTours.Columns["HasWiFi"].HeaderText = "Wi-Fi";
             dataGridViewTours.Columns["Surcharges"].HeaderText = "Доплаты";
-            dataGridViewTours.Columns["TotalCost"].HeaderText = "Общая стоимость";
 
-            dataGridViewTours.Columns["PricePerPerson"].DefaultCellStyle.Format = "C0";
-            dataGridViewTours.Columns["Surcharges"].DefaultCellStyle.Format = "C0";
-            dataGridViewTours.Columns["TotalCost"].DefaultCellStyle.Format = "C0";
             dataGridViewTours.Columns["DepartureDate"].DefaultCellStyle.Format = "dd.MM.yyyy";
+
+            var totalCostColumn = new DataGridViewTextBoxColumn()
+            {
+                Name = "TotalCost",
+                HeaderText = "Общая стоимость",
+                Width = 120
+            };
+            dataGridViewTours.Columns.Add(totalCostColumn);
+
+            dataGridViewTours.DataError += DataGridViewTours_DataError;
+        }
+
+        private void DataGridViewTours_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            if (e.Exception is FormatException)
+            {
+                e.ThrowException = false;
+                e.Cancel = true;
+            }
         }
 
         private void dataGridViewTours_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            if (e.RowIndex < 0 || e.ColumnIndex < 0)
-            {
-                return;
-            }
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
 
             var col = dataGridViewTours.Columns[e.ColumnIndex];
             var row = dataGridViewTours.Rows[e.RowIndex];
 
-            if (row.DataBoundItem is not Tour tour)
-            {
-                return;
-            }
+            if (row.DataBoundItem is not Tour tour) return;
 
             if (col.DataPropertyName == nameof(Tour.Direction))
             {
@@ -129,6 +140,21 @@ namespace DataGridView
                     Direction.Shushary => "Шушары",
                     _ => tour.Direction.ToString()
                 };
+                e.FormattingApplied = true;
+            }
+            else if (col.DataPropertyName == nameof(Tour.PricePerPerson) ||
+                     col.DataPropertyName == nameof(Tour.Surcharges))
+            {
+                if (e.Value is decimal decimalValue)
+                {
+                    e.Value = decimalValue.ToString("C0");
+                    e.FormattingApplied = true;
+                }
+            }
+            else if (col.Name == "TotalCost")
+            {
+                decimal totalCost = (tour.PricePerPerson * tour.NumberOfPeople) + tour.Surcharges;
+                e.Value = totalCost.ToString("C0");
                 e.FormattingApplied = true;
             }
         }

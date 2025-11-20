@@ -29,20 +29,19 @@ namespace DataGridView
 
         private void InitializeBindings()
         {
-            comboBoxDirection.AddBinding(x => x.SelectedItem,tour,
-                x => x.Direction, errorProvider1, UpdateSaveButtonState);
+            comboBoxDirection.AddBinding(x => x.SelectedItem, tour, x => x.Direction, errorProvider1, UpdateSaveButtonState);
 
-            dtpDeparture.AddBinding(x => x.Value,tour, x => x.DepartureDate, errorProvider1, UpdateSaveButtonState);
+            dtpDeparture.AddBinding(x => x.Value, tour, x => x.DepartureDate, errorProvider1, UpdateSaveButtonState);
 
             numNights.AddBinding(x => x.Value, tour, x => x.Nights, errorProvider1, UpdateSaveButtonState);
 
-            numPrice.AddBinding( x => x.Value, tour, x => x.PricePerPerson, errorProvider1, UpdateSaveButtonState);
+            numPrice.AddBinding(x => x.Value, tour, x => x.PricePerPerson, errorProvider1, UpdateSaveButtonState);
 
-            numPeople.AddBinding( x => x.Value, tour, x => x.NumberOfPeople, errorProvider1, UpdateSaveButtonState);
+            numPeople.AddBinding(x => x.Value, tour, x => x.NumberOfPeople, null, UpdateSaveButtonState); 
 
-            chkWiFi.AddBinding( x => x.Checked, tour, x => x.HasWiFi, errorProvider1, UpdateSaveButtonState);
+            chkWiFi.AddBinding(x => x.Checked, tour, x => x.HasWiFi, null, UpdateSaveButtonState); 
 
-            numSurcharges.AddBinding( x => x.Value, tour, x => x.Surcharges, errorProvider1, UpdateSaveButtonState);
+            numSurcharges.AddBinding(x => x.Value, tour, x => x.Surcharges, errorProvider1, UpdateSaveButtonState);
         }
 
         private void UpdateSaveButtonState()

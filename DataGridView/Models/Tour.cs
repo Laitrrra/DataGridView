@@ -16,7 +16,7 @@ namespace DataGridView.Models
 
         [Display(Name = "Дата вылета")]
         [Required(ErrorMessage = "Укажите дату вылета")]
-        [CustomValidation(typeof(Tour), nameof(ValidateDepartureDate))]
+        [DepartureDateValidation] 
         public DateTime DepartureDate { get; set; } = DateTime.Now.AddDays(7);
 
         [Display(Name = "Количество ночей")]
@@ -41,17 +41,6 @@ namespace DataGridView.Models
         [Range(ValidationConsts.MinSurcharges, ValidationConsts.MaxSurcharges,
                ErrorMessage = "{0} не могут быть отрицательными")]
         public decimal Surcharges { get; set; }
-
-        public decimal TotalCost => (PricePerPerson * NumberOfPeople) + Surcharges;
-
-        public static ValidationResult ValidateDepartureDate(DateTime date, ValidationContext context)
-        {
-            if (date < DateTime.Today)
-            {
-                return new ValidationResult("Дата вылета не может быть в прошлом");
-            }
-            return ValidationResult.Success;
-        }
 
         public Tour Clone()
         {

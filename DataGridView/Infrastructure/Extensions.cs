@@ -30,7 +30,9 @@ namespace DataGridView.Infrastructure
             void ValidateAndNotify()
             {
                 if (errorProvider != null)
+                {
                     ValidateControl(control, source, src, errorProvider);
+                }
                 onValidated?.Invoke();
             }
 
@@ -59,7 +61,10 @@ namespace DataGridView.Infrastructure
             var member = expression.Body as MemberExpression
                          ?? (expression.Body as UnaryExpression)?.Operand as MemberExpression;
 
-            if (member?.Member is PropertyInfo pi) return pi.Name;
+            if (member?.Member is PropertyInfo pi)
+            {
+                return pi.Name;
+            }
             throw new ArgumentException("Expression must be a property access", nameof(expression));
         }
 
