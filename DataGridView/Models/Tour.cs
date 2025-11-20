@@ -1,49 +1,48 @@
-﻿using DataGridView.Models;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace DataGridView
+namespace DataGridView.Models
 {
+    /// <summary>
+    /// Модель данных тура
+    /// </summary>
     public class Tour
     {
         public int Id { get; set; }
 
+        [Display(Name = "Направление")]
         [Required(ErrorMessage = "Выберите направление")]
         public Direction Direction { get; set; } = Direction.Turkey;
 
+        [Display(Name = "Дата вылета")]
         [Required(ErrorMessage = "Укажите дату вылета")]
         [CustomValidation(typeof(Tour), nameof(ValidateDepartureDate))]
-        public DateTime DepartureDate { get; set; } = DateTime.Now.AddDays(7); 
+        public DateTime DepartureDate { get; set; } = DateTime.Now.AddDays(7);
 
-        [Range(1, 365, ErrorMessage = "Количество ночей должно быть от 1 до 365")]
+        [Display(Name = "Количество ночей")]
+        [Range(ValidationConsts.MinNights, ValidationConsts.MaxNights,
+               ErrorMessage = "{0} должно быть от {1} до {2}")]
         public int Nights { get; set; } = 7;
 
-        [Range(0.01, double.MaxValue, ErrorMessage = "Цена должна быть больше 0")]
-        public decimal PricePerPerson { get; set; } = 10000m; 
+        [Display(Name = "Стоимость за отдыхающего")]
+        [Range(ValidationConsts.MinPrice, ValidationConsts.MaxPrice,
+               ErrorMessage = "{0} должна быть от {1} до {2}")]
+        public decimal PricePerPerson { get; set; } = 10000m;
 
-        [Range(1, 100, ErrorMessage = "Количество людей должно быть от 1 до 100")]
+        [Display(Name = "Количество отдыхающих")]
+        [Range(ValidationConsts.MinNumberOfPeople, ValidationConsts.MaxNumberOfPeople,
+               ErrorMessage = "{0} должно быть от {1} до {2}")]
         public int NumberOfPeople { get; set; } = 2;
 
+        [Display(Name = "Wi-Fi")]
         public bool HasWiFi { get; set; } = true;
 
-        [Range(0, double.MaxValue, ErrorMessage = "Доплаты не могут быть отрицательными")]
+        [Display(Name = "Доплаты")]
+        [Range(ValidationConsts.MinSurcharges, ValidationConsts.MaxSurcharges,
+               ErrorMessage = "{0} не могут быть отрицательными")]
         public decimal Surcharges { get; set; }
 
         public decimal TotalCost => (PricePerPerson * NumberOfPeople) + Surcharges;
-
-        public static string GetDirectionDisplay(Direction direction)
-        {
-            return direction switch
-            {
-                Direction.Turkey => "Турция",
-                Direction.Spain => "Испания",
-                Direction.Italy => "Италия",
-                Direction.France => "Франция",
-                Direction.Shushary => "Шушары",
-                Direction.Unknown => "Неизвестно",
-                _ => "Неизвестно"
-            };
-        }
 
         public static ValidationResult ValidateDepartureDate(DateTime date, ValidationContext context)
         {

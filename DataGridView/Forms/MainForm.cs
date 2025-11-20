@@ -6,16 +6,15 @@ namespace DataGridView
 {
     public partial class MainForm : Form
     {
-        private TourModel tours = new TourModel();
+        private TourManager tours = new TourManager();
         private BindingSource bindingSource = new BindingSource();
 
         public MainForm()
         {
-            tours.Tours.AddRange(new[]
+            var testTours = new[]
             {
                 new Tour
                 {
-                    Id = 1,
                     Direction = Direction.Turkey,
                     DepartureDate = DateTime.Now.AddDays(7),
                     Nights = 10,
@@ -26,7 +25,6 @@ namespace DataGridView
                 },
                 new Tour
                 {
-                    Id = 2,
                     Direction = Direction.Spain,
                     DepartureDate = DateTime.Now.AddDays(14),
                     Nights = 7,
@@ -37,7 +35,6 @@ namespace DataGridView
                 },
                 new Tour
                 {
-                    Id = 3,
                     Direction = Direction.Italy,
                     DepartureDate = DateTime.Now.AddDays(21),
                     Nights = 8,
@@ -48,7 +45,6 @@ namespace DataGridView
                 },
                 new Tour
                 {
-                    Id = 4,
                     Direction = Direction.France,
                     DepartureDate = DateTime.Now.AddDays(30),
                     Nights = 6,
@@ -59,7 +55,6 @@ namespace DataGridView
                 },
                 new Tour
                 {
-                    Id = 5,
                     Direction = Direction.Shushary,
                     DepartureDate = DateTime.Now.AddDays(2),
                     Nights = 2,
@@ -68,10 +63,22 @@ namespace DataGridView
                     HasWiFi = false,
                     Surcharges = 0
                 }
-            });
+            };
+
+
+            foreach (var tour in testTours)
+            {
+                tours.Add(tour);
+            }
 
             InitializeComponent();
             SetupGrid();
+            RefreshStats();
+        }
+
+        private void RefreshData()
+        {
+            bindingSource.ResetBindings(false);
             RefreshStats();
         }
 
@@ -98,11 +105,18 @@ namespace DataGridView
 
         private void dataGridViewTours_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+            if (e.RowIndex < 0 || e.ColumnIndex < 0)
+            {
+                return;
+            }
 
             var col = dataGridViewTours.Columns[e.ColumnIndex];
             var row = dataGridViewTours.Rows[e.RowIndex];
-            if (row.DataBoundItem is not Tour tour) return;
+
+            if (row.DataBoundItem is not Tour tour)
+            {
+                return;
+            }
 
             if (col.DataPropertyName == nameof(Tour.Direction))
             {
@@ -113,8 +127,7 @@ namespace DataGridView
                     Direction.Italy => "Италия",
                     Direction.France => "Франция",
                     Direction.Shushary => "Шушары",
-                    Direction.Unknown => "Неизвестно",
-                    _ => "Неизвестно"
+                    _ => tour.Direction.ToString()
                 };
                 e.FormattingApplied = true;
             }
@@ -122,12 +135,11 @@ namespace DataGridView
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            var form = new TourForm(new Tour(), true);
+            var form = new TourForm();
             if (form.ShowDialog() == DialogResult.OK)
             {
                 tours.Add(form.Tour);
-                bindingSource.ResetBindings(false);
-                RefreshStats();
+                RefreshData();
             }
         }
 
@@ -141,12 +153,11 @@ namespace DataGridView
             }
 
             var tour = (Tour)bindingSource.Current;
-            var form = new TourForm(tour.Clone(), false);
+            var form = new TourForm(tour.Clone());
             if (form.ShowDialog() == DialogResult.OK)
             {
                 tours.Update(form.Tour);
-                bindingSource.ResetBindings(false);
-                RefreshStats();
+                RefreshData(); 
             }
         }
 
@@ -166,8 +177,7 @@ namespace DataGridView
             if (result == DialogResult.Yes)
             {
                 tours.Remove(tour.Id);
-                bindingSource.ResetBindings(false);
-                RefreshStats();
+                RefreshData();
             }
         }
 

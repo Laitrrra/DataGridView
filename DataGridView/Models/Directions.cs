@@ -12,11 +12,6 @@ namespace DataGridView.Models
     public enum Direction
     {
         /// <summary>
-        /// Неизвестно
-        /// </summary>
-        Unknown,
-
-        /// <summary>
         /// Турция
         /// </summary>
         Turkey,

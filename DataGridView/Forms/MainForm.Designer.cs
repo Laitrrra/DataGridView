@@ -46,9 +46,12 @@
             // 
             // dataGridViewTours
             // 
+            dataGridViewTours.AllowUserToAddRows = false;
+            dataGridViewTours.AllowUserToDeleteRows = false;
             dataGridViewTours.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewTours.Location = new Point(0, 28);
             dataGridViewTours.Name = "dataGridViewTours";
+            dataGridViewTours.ReadOnly = true;
             dataGridViewTours.Size = new Size(800, 422);
             dataGridViewTours.TabIndex = 0;
             dataGridViewTours.CellFormatting += dataGridViewTours_CellFormatting;
@@ -130,6 +133,7 @@
             Controls.Add(toolStrip1);
             Controls.Add(dataGridViewTours);
             Name = "MainForm";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Горящие туры";
             ((System.ComponentModel.ISupportInitialize)dataGridViewTours).EndInit();
             toolStrip1.ResumeLayout(false);

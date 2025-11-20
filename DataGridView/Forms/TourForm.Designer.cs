@@ -235,7 +235,7 @@
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "TourForm";
-            StartPosition = FormStartPosition.CenterParent;
+            StartPosition = FormStartPosition.CenterScreen;
             ((System.ComponentModel.ISupportInitialize)numNights).EndInit();
             ((System.ComponentModel.ISupportInitialize)numPrice).EndInit();
             ((System.ComponentModel.ISupportInitialize)numPeople).EndInit();

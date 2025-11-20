@@ -1,77 +1,58 @@
 ﻿using System;
 using System.Windows.Forms;
 using DataGridView.Models;
-using DataGridView;
-using DataGridView.Infrastructure; 
+using DataGridView.Infrastructure;
 
 namespace DataGridView
 {
     public partial class TourForm : Form
     {
-        private Tour tours;
+        private Tour tour;
 
-        public Tour Tour => tours;
+        public Tour Tour => tour;
 
-        public TourForm(Tour tour, bool isNew)
+        public TourForm(Tour? tour = null)
         {
-            tours = tour;
+            this.tour = tour ?? new Tour();
 
             InitializeComponent();
 
-            var directions = Enum.GetValues(typeof(Direction));
-            var validDirections = new System.Collections.ArrayList();
+            comboBoxDirection.DataSource = Enum.GetValues(typeof(Direction));
 
-            foreach (Direction direction in directions)
-            {
-                if (direction != Direction.Unknown)
-                {
-                    validDirections.Add(direction);
-                }
-            }
-
-            comboBoxDirection.DataSource = validDirections;
-
-            if (tours.Direction != Direction.Unknown)
-            {
-                comboBoxDirection.SelectedItem = tours.Direction;
-            }
-            else
-            {
-                comboBoxDirection.SelectedIndex = 0;
-            }
+            comboBoxDirection.SelectedItem = this.tour.Direction;
 
             InitializeBindings();
             UpdateSaveButtonState();
 
-            this.Text = isNew ? "Добавление тура" : "Редактирование тура";
+            this.Text = tour == null ? "Добавление тура" : "Редактирование тура";
         }
 
         private void InitializeBindings()
         {
-            comboBoxDirection.AddBinding(x => x.SelectedItem,tours,
+            comboBoxDirection.AddBinding(x => x.SelectedItem,tour,
                 x => x.Direction, errorProvider1, UpdateSaveButtonState);
 
-            dtpDeparture.AddBinding(x => x.Value,tours, x => x.DepartureDate, errorProvider1, UpdateSaveButtonState);
+            dtpDeparture.AddBinding(x => x.Value,tour, x => x.DepartureDate, errorProvider1, UpdateSaveButtonState);
 
-            numNights.AddBinding(x => x.Value, tours, x => x.Nights, errorProvider1, UpdateSaveButtonState);
+            numNights.AddBinding(x => x.Value, tour, x => x.Nights, errorProvider1, UpdateSaveButtonState);
 
-            numPrice.AddBinding( x => x.Value, tours, x => x.PricePerPerson, errorProvider1, UpdateSaveButtonState);
+            numPrice.AddBinding( x => x.Value, tour, x => x.PricePerPerson, errorProvider1, UpdateSaveButtonState);
 
-            numPeople.AddBinding( x => x.Value, tours, x => x.NumberOfPeople, errorProvider1, UpdateSaveButtonState);
+            numPeople.AddBinding( x => x.Value, tour, x => x.NumberOfPeople, errorProvider1, UpdateSaveButtonState);
 
-            chkWiFi.AddBinding( x => x.Checked, tours, x => x.HasWiFi, errorProvider1, UpdateSaveButtonState);
+            chkWiFi.AddBinding( x => x.Checked, tour, x => x.HasWiFi, errorProvider1, UpdateSaveButtonState);
 
-            numSurcharges.AddBinding( x => x.Value, tours, x => x.Surcharges, errorProvider1, UpdateSaveButtonState);
+            numSurcharges.AddBinding( x => x.Value, tour, x => x.Surcharges, errorProvider1, UpdateSaveButtonState);
         }
 
         private void UpdateSaveButtonState()
         {
-            btnOK.Enabled = tours.IsValid();
+            btnOK.Enabled = tour.IsValid();
         }
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            if (!tours.IsValid())
+            if (!tour.IsValid())
             {
                 MessageBox.Show("Исправьте ошибки в форме", "Ошибка валидации",
                               MessageBoxButtons.OK, MessageBoxIcon.Error);
