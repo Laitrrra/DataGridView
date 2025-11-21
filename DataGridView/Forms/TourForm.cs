@@ -5,12 +5,22 @@ using DataGridView.Infrastructure;
 
 namespace DataGridView
 {
+    /// <summary>
+    /// Форма для добавления и редактирования туров
+    /// </summary>
     public partial class TourForm : Form
     {
         private Tour tour;
 
+        /// <summary>
+        /// Получает тур, созданный или отредактированный в форме
+        /// </summary>
         public Tour Tour => tour;
 
+        /// <summary>
+        /// Инициализирует новый экземпляр <see cref="TourForm" />
+        /// </summary>
+        /// <param name="tour">Тур для редактирования. Если null - создается новый тур</param>
         public TourForm(Tour? tour = null)
         {
             this.tour = tour ?? new Tour();
@@ -37,7 +47,7 @@ namespace DataGridView
 
             numPrice.AddBinding(x => x.Value, tour, x => x.PricePerPerson, errorProvider1, UpdateSaveButtonState);
 
-            numPeople.AddBinding(x => x.Value, tour, x => x.NumberOfPeople, null, UpdateSaveButtonState); 
+            numPeople.AddBinding(x => x.Value, tour, x => x.NumberOfPeople, errorProvider1, UpdateSaveButtonState); 
 
             chkWiFi.AddBinding(x => x.Checked, tour, x => x.HasWiFi, null, UpdateSaveButtonState); 
 

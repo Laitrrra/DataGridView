@@ -11,14 +11,23 @@ namespace DataGridView.Models
         private List<Tour> tours = new List<Tour>();
         private int nextId = 1;
 
+        /// <summary>
+        /// Коллекция туров (только для чтения)
+        /// </summary>
         public IReadOnlyList<Tour> Tours => tours;
 
+        /// <summary>
+        /// Добавляет новый тур
+        /// </summary>
         public void Add(Tour tour)
         {
             tour.Id = nextId++;
             tours.Add(tour);
         }
 
+        /// <summary>
+        /// Обновляет существующий тур
+        /// </summary>
         public void Update(Tour updatedTour)
         {
             var existingTour = tours.FirstOrDefault(t => t.Id == updatedTour.Id);
@@ -34,17 +43,32 @@ namespace DataGridView.Models
             }
         }
 
+        /// <summary>
+        /// Удаляет тур по идентификатору
+        /// </summary>
         public void Remove(int id)
         {
             tours.RemoveAll(t => t.Id == id);
         }
 
+        /// <summary>
+        /// Общее количество туров
+        /// </summary>
         public int TotalTours => tours.Count;
 
+        /// <summary>
+        /// Общая стоимость всех туров
+        /// </summary>
         public decimal TotalCost => tours.Sum(t => CalculateTotalCost(t));
 
+        /// <summary>
+        /// Количество туров с доплатами
+        /// </summary>
         public int ToursWithSurcharges => tours.Count(t => t.Surcharges > 0);
 
+        /// <summary>
+        /// Общая сумма доплат
+        /// </summary>
         public decimal TotalSurcharges => tours.Sum(t => t.Surcharges);
 
         /// <summary>

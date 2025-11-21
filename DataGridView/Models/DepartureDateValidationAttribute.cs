@@ -8,6 +8,7 @@ namespace DataGridView.Models
     /// </summary>
     public class DepartureDateValidationAttribute : ValidationAttribute
     {
+        /// <inheritdoc />
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             if (value is DateTime date)

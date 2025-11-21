@@ -4,11 +4,17 @@ using System.Windows.Forms;
 
 namespace DataGridView
 {
+    /// <summary>
+    /// Главная форма приложения для управления турами
+    /// </summary>
     public partial class MainForm : Form
     {
         private TourManager tours = new TourManager();
         private BindingSource bindingSource = new BindingSource();
 
+        /// <summary>
+        /// Инициализирует новый экземпляр <see cref="MainForm" />
+        /// </summary>
         public MainForm()
         {
             var testTours = new[]

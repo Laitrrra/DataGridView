@@ -81,6 +81,9 @@ namespace DataGridView.Infrastructure
             errorProvider.SetError(control, propertyError?.ErrorMessage ?? string.Empty);
         }
 
+        /// <summary>
+        /// Проверяет валидность объекта на основе атрибутов валидации
+        /// </summary>
         public static bool IsValid(this object obj)
         {
             var ctx = new ValidationContext(obj);
