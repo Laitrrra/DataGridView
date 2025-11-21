@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Windows.Forms;
 
-namespace DataGridView.Infrastructure
+namespace DataGridView.App.Infrastructure
 {
     /// <summary>Упрощение привязок и валидации с ErrorProvider.</summary>
     public static class Extensions

@@ -1,4 +1,6 @@
-namespace DataGridView
+using DataGridView.Services;
+
+namespace DataGridView.App
 {
     internal static class Program
     {
@@ -8,10 +10,10 @@ namespace DataGridView
         [STAThread]
         static void Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            Application.Run(new MainForm());
+
+            ITourService tourService = new InMemoryTourService();
+            Application.Run(new MainForm(tourService));
         }
     }
 }

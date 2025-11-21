@@ -1,7 +1,5 @@
-﻿using System;
-using System.Windows.Forms;
-using DataGridView.Models;
-using DataGridView.Infrastructure;
+﻿using DataGridView.Entities;
+using DataGridView.App.Infrastructure;
 
 namespace DataGridView
 {

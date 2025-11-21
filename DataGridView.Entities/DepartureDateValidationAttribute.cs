@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace DataGridView.Models
+namespace DataGridView.Entities
 {
     /// <summary>
     /// Атрибут валидации для проверки даты вылета
