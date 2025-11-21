@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace DataGridView.Models
+namespace DataGridView.Entities.Validation
 {
     /// <summary>
     /// Атрибут валидации для проверки даты вылета
@@ -9,7 +9,7 @@ namespace DataGridView.Models
     public class DepartureDateValidationAttribute : ValidationAttribute
     {
         /// <inheritdoc />
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
             if (value is DateTime date)
             {

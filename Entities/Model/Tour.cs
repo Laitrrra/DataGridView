@@ -1,15 +1,15 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using DataGridView.Constants;
 
-namespace DataGridView.Models
+namespace DataGridView.Entities.Models
 {
     /// <summary>
-    /// Модель данных тура
+    /// Модель тура
     /// </summary>
     public class Tour
     {
         /// <summary>
-        /// Уникальный идентификатор тура
+        /// Идентификатор тура
         /// </summary>
         public int Id { get; set; }
 
@@ -17,15 +17,14 @@ namespace DataGridView.Models
         /// Направление тура
         /// </summary>
         [Display(Name = "Направление")]
-        [Required(ErrorMessage = "Выберите направление")]
+        [Required(ErrorMessage = "{0} обязательно для выбора")]
         public Direction Direction { get; set; } = Direction.Turkey;
 
         /// <summary>
         /// Дата вылета
         /// </summary>
         [Display(Name = "Дата вылета")]
-        [Required(ErrorMessage = "Укажите дату вылета")]
-        [DepartureDateValidation]
+        [Required(ErrorMessage = "{0} обязательна для заполнения")]
         public DateTime DepartureDate { get; set; } = DateTime.Now.AddDays(7);
 
         /// <summary>
@@ -33,23 +32,23 @@ namespace DataGridView.Models
         /// </summary>
         [Display(Name = "Количество ночей")]
         [Range(ValidationConsts.MinNights, ValidationConsts.MaxNights,
-               ErrorMessage = "{0} должно быть от {1} до {2}")]
+               ErrorMessage = "{0} должно быть между {1} и {2}")]
         public int Nights { get; set; } = 7;
 
         /// <summary>
-        /// Стоимость за одного отдыхающего
+        /// Стоимость за человека
         /// </summary>
-        [Display(Name = "Стоимость за отдыхающего")]
+        [Display(Name = "Стоимость за человека")]
         [Range(ValidationConsts.MinPrice, ValidationConsts.MaxPrice,
-               ErrorMessage = "{0} должна быть от {1} до {2}")]
+               ErrorMessage = "{0} должна быть в диапазоне от {1} до {2}")]
         public decimal PricePerPerson { get; set; } = 10000m;
 
         /// <summary>
-        /// Количество отдыхающих
+        /// Количество людей
         /// </summary>
-        [Display(Name = "Количество отдыхающих")]
+        [Display(Name = "Количество людей")]
         [Range(ValidationConsts.MinNumberOfPeople, ValidationConsts.MaxNumberOfPeople,
-               ErrorMessage = "{0} должно быть от {1} до {2}")]
+               ErrorMessage = "{0} должно быть между {1} и {2}")]
         public int NumberOfPeople { get; set; } = 2;
 
         /// <summary>
@@ -59,7 +58,7 @@ namespace DataGridView.Models
         public bool HasWiFi { get; set; } = true;
 
         /// <summary>
-        /// Дополнительные платежи
+        /// Доплаты
         /// </summary>
         [Display(Name = "Доплаты")]
         [Range(ValidationConsts.MinSurcharges, ValidationConsts.MaxSurcharges,
@@ -67,8 +66,10 @@ namespace DataGridView.Models
         public decimal Surcharges { get; set; }
 
         /// <summary>
-        /// Создает копию текущего тура
+        /// Рассчитать общую стоимость тура
         /// </summary>
+        public decimal CalculateTotalCost() => (PricePerPerson * NumberOfPeople) + Surcharges;
+
         public Tour Clone()
         {
             return new Tour

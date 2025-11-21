@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataGridView.Models
+namespace DataGridView.Entities
 {
     /// <summary>
     /// Направления туров

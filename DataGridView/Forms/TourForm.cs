@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
-using DataGridView.Models;
+using DataGridView.Entities.Models;
 using DataGridView.Infrastructure;
 
 namespace DataGridView

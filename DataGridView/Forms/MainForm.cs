@@ -1,85 +1,27 @@
-using DataGridView.Models;
-using System;
-using System.Windows.Forms;
+using DataGridView.Entities;
+using DataGridView.Entities.Models;
+using DataGridView.Services.Contracts;
+using System.ComponentModel;
 
-namespace DataGridView
+namespace DataGridView.App.Forms
 {
     /// <summary>
     /// Главная форма приложения для управления турами
     /// </summary>
     public partial class MainForm : Form
     {
-        private TourManager tours = new TourManager();
-        private BindingSource bindingSource = new BindingSource();
-
         /// <summary>
         /// Инициализирует новый экземпляр <see cref="MainForm" />
         /// </summary>
-        public MainForm()
+        private readonly ITourService _tourService;
+        private BindingSource _bindingSource = new BindingSource();
+
+        public MainForm(ITourService tourService)
         {
-            var testTours = new[]
-            {
-                new Tour
-                {
-                    Direction = Direction.Turkey,
-                    DepartureDate = DateTime.Now.AddDays(7),
-                    Nights = 10,
-                    PricePerPerson = 45000,
-                    NumberOfPeople = 2,
-                    HasWiFi = true,
-                    Surcharges = 5000
-                },
-                new Tour
-                {
-                    Direction = Direction.Spain,
-                    DepartureDate = DateTime.Now.AddDays(14),
-                    Nights = 7,
-                    PricePerPerson = 65000,
-                    NumberOfPeople = 3,
-                    HasWiFi = true,
-                    Surcharges = 8000
-                },
-                new Tour
-                {
-                    Direction = Direction.Italy,
-                    DepartureDate = DateTime.Now.AddDays(21),
-                    Nights = 8,
-                    PricePerPerson = 55000,
-                    NumberOfPeople = 2,
-                    HasWiFi = false,
-                    Surcharges = 3000
-                },
-                new Tour
-                {
-                    Direction = Direction.France,
-                    DepartureDate = DateTime.Now.AddDays(30),
-                    Nights = 6,
-                    PricePerPerson = 70000,
-                    NumberOfPeople = 4,
-                    HasWiFi = true,
-                    Surcharges = 12000
-                },
-                new Tour
-                {
-                    Direction = Direction.Shushary,
-                    DepartureDate = DateTime.Now.AddDays(2),
-                    Nights = 2,
-                    PricePerPerson = 5000,
-                    NumberOfPeople = 1,
-                    HasWiFi = false,
-                    Surcharges = 0
-                }
-            };
-
-
-            foreach (var tour in testTours)
-            {
-                tours.Add(tour);
-            }
-
+            _tourService = tourService;
             InitializeComponent();
-            SetupGrid();
-            RefreshStats();
+            _ = SetupGrid(); 
+            _ = RefreshStats();
         }
 
         private void RefreshData()
@@ -90,40 +32,71 @@ namespace DataGridView
 
         private void SetupGrid()
         {
-            bindingSource.DataSource = tours.Tours;
-            dataGridViewTours.DataSource = bindingSource;
-
-            dataGridViewTours.AutoGenerateColumns = true;
+            var tours = await _tourService.GetAllTours();
+            _bindingSource.DataSource = tours.ToList();
+            dataGridViewTours.DataSource = _bindingSource;
 
             dataGridViewTours.Columns["Id"].Visible = false;
             dataGridViewTours.Columns["Direction"].HeaderText = "Направление";
             dataGridViewTours.Columns["DepartureDate"].HeaderText = "Дата вылета";
             dataGridViewTours.Columns["Nights"].HeaderText = "Ночей";
-            dataGridViewTours.Columns["PricePerPerson"].HeaderText = "Стоимость за отдыхающего";
-            dataGridViewTours.Columns["NumberOfPeople"].HeaderText = "Количество отдыхающих";
+            dataGridViewTours.Columns["PricePerPerson"].HeaderText = "Стоимость за человека";
+            dataGridViewTours.Columns["NumberOfPeople"].HeaderText = "Количество людей";
             dataGridViewTours.Columns["HasWiFi"].HeaderText = "Wi-Fi";
             dataGridViewTours.Columns["Surcharges"].HeaderText = "Доплаты";
-
-            dataGridViewTours.Columns["DepartureDate"].DefaultCellStyle.Format = "dd.MM.yyyy";
-
-            var totalCostColumn = new DataGridViewTextBoxColumn()
-            {
-                Name = "TotalCost",
-                HeaderText = "Общая стоимость",
-                Width = 120
-            };
-            dataGridViewTours.Columns.Add(totalCostColumn);
-
-            dataGridViewTours.DataError += DataGridViewTours_DataError;
         }
 
-        private void DataGridViewTours_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        private async Task RefreshStatsAsync()
         {
-            if (e.Exception is FormatException)
+            var stats = await _tourService.GetStatistics();
+            labelTotalTours.Text = $"Всего туров: {stats.TourCount}";
+            labelTotalCost.Text = $"Общая сумма: {stats.TotalCost:C}";
+            labelToursWithSurcharges.Text = $"Туров с доплатами: {stats.ToursWithSurcharges}";
+            labelTotalSurcharges.Text = $"Общая сумма доплат: {stats.TotalSurcharges:C}";
+        }
+
+        private async void btnAdd_Click(object sender, EventArgs e)
+        {
+            var form = new TourForm();
+            if (form.ShowDialog() == DialogResult.OK)
             {
-                e.ThrowException = false;
-                e.Cancel = true;
+                await _tourService.AddTour(form.Tour);
+                await RefreshDataAsync();
             }
+        }
+
+        private async void btnEdit_Click(object sender, EventArgs e)
+        {
+            if (_bindingSource.Current == null) return;
+
+            var tour = (Tour)_bindingSource.Current;
+            var form = new TourForm(tour.Clone());
+            if (form.ShowDialog() == DialogResult.OK)
+            {
+                await _tourService.UpdateTour(form.Tour);
+                await RefreshDataAsync();
+            }
+        }
+
+        private async void btnDelete_Click(object sender, EventArgs e)
+        {
+            if (_bindingSource.Current == null) return;
+
+            var tour = (Tour)_bindingSource.Current;
+            var result = MessageBox.Show($"Удалить тур в {tour.Direction}?", "Подтверждение",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                await _tourService.DeleteTour(tour.Id);
+                await RefreshDataAsync();
+            }
+        }
+
+        private async Task RefreshDataAsync()
+        {
+            await SetupGridAsync();
+            await RefreshStatsAsync();
         }
 
         private void dataGridViewTours_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -135,7 +108,7 @@ namespace DataGridView
 
             if (row.DataBoundItem is not Tour tour) return;
 
-            if (col.DataPropertyName == nameof(Tour.Direction))
+            if (col.DataPropertyName == "Direction")
             {
                 e.Value = tour.Direction switch
                 {
@@ -148,77 +121,6 @@ namespace DataGridView
                 };
                 e.FormattingApplied = true;
             }
-            else if (col.DataPropertyName == nameof(Tour.PricePerPerson) ||
-                     col.DataPropertyName == nameof(Tour.Surcharges))
-            {
-                if (e.Value is decimal decimalValue)
-                {
-                    e.Value = decimalValue.ToString("C0");
-                    e.FormattingApplied = true;
-                }
-            }
-            else if (col.Name == "TotalCost")
-            {
-                decimal totalCost = (tour.PricePerPerson * tour.NumberOfPeople) + tour.Surcharges;
-                e.Value = totalCost.ToString("C0");
-                e.FormattingApplied = true;
-            }
-        }
-
-        private void btnAdd_Click(object sender, EventArgs e)
-        {
-            var form = new TourForm();
-            if (form.ShowDialog() == DialogResult.OK)
-            {
-                tours.Add(form.Tour);
-                RefreshData();
-            }
-        }
-
-        private void btnEdit_Click(object sender, EventArgs e)
-        {
-            if (bindingSource.Current == null)
-            {
-                MessageBox.Show("Выберите тур для редактирования", "Информация",
-                              MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-
-            var tour = (Tour)bindingSource.Current;
-            var form = new TourForm(tour.Clone());
-            if (form.ShowDialog() == DialogResult.OK)
-            {
-                tours.Update(form.Tour);
-                RefreshData(); 
-            }
-        }
-
-        private void btnDelete_Click(object sender, EventArgs e)
-        {
-            if (bindingSource.Current == null)
-            {
-                MessageBox.Show("Выберите тур для удаления", "Информация",
-                              MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-
-            var tour = (Tour)bindingSource.Current;
-            var result = MessageBox.Show($"Удалить тур в {tour.Direction}?", "Подтверждение удаления",
-                                       MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-            if (result == DialogResult.Yes)
-            {
-                tours.Remove(tour.Id);
-                RefreshData();
-            }
-        }
-
-        private void RefreshStats()
-        {
-            labelTotalTours.Text = $"Всего туров: {tours.TotalTours}";
-            labelTotalCost.Text = $"Общая сумма: {tours.TotalCost:C}";
-            labelToursWithSurcharges.Text = $"Туров с доплатами: {tours.ToursWithSurcharges}";
-            labelTotalSurcharges.Text = $"Общая сумма доплат: {tours.TotalSurcharges:C}";
         }
     }
 }
