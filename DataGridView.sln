@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataGridView.Services", "Da
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataGridView.Services.Contracts", "DataGridView.Services.Contracts\DataGridView.Services.Contracts.csproj", "{7E376EC6-57E9-4A36-B385-E13A4C08E43B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataGridView.Services.Tests", "DataGridView.Services.Tests\DataGridView.Services.Tests.csproj", "{4902068B-776F-47D8-B611-0FF6302B0231}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{7E376EC6-57E9-4A36-B385-E13A4C08E43B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E376EC6-57E9-4A36-B385-E13A4C08E43B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E376EC6-57E9-4A36-B385-E13A4C08E43B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4902068B-776F-47D8-B611-0FF6302B0231}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4902068B-776F-47D8-B611-0FF6302B0231}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4902068B-776F-47D8-B611-0FF6302B0231}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4902068B-776F-47D8-B611-0FF6302B0231}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
