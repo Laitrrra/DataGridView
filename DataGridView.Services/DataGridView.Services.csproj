@@ -9,16 +9,16 @@
 		<Authors>Laitra</Authors>
 		<Product>$(AssemblyName)</Product>
 		<Description>DataGridViewProject Крупская Анна ИП 22-3</Description>
-		<Version>1.0.1</Version>
+		<Version>1.0.2</Version>
 		<PackageIcon>aga.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageTags>tour;management;inmemory;datagridview</PackageTags>
+		<IncludeReferencedProjects>true</IncludeReferencedProjects>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\DataGridView.Services.Contracts\DataGridView.Services.Contracts.csproj" />
 	</ItemGroup>
-
 	<ItemGroup>
 		<None Include="README.md" Pack="true" PackagePath="\" />
 		<None Include="aga.png" Pack="true" PackagePath="\" />
