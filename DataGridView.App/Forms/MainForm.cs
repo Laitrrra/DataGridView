@@ -6,12 +6,12 @@ namespace DataGridView.App
 {
     public partial class MainForm : Form
     {
-        private readonly ITourService _tourService;
-        private readonly BindingSource _bindingSource = new BindingSource();
+        private readonly ITourService tourServices;
+        private readonly BindingSource bindingSource = new BindingSource();
 
         public MainForm(ITourService tourService)
         {
-            _tourService = tourService;
+            tourServices = tourService;
             InitializeComponent();
             SetupGrid();
             RefreshStats();
@@ -19,14 +19,14 @@ namespace DataGridView.App
 
         private void RefreshData()
         {
-            _bindingSource.ResetBindings(false);
+            bindingSource.ResetBindings(false);
             RefreshStats();
         }
 
         private void SetupGrid()
         {
-            _bindingSource.DataSource = _tourService.GetAllTours();  
-            dataGridViewTours.DataSource = _bindingSource; 
+            bindingSource.DataSource = tourServices.GetAllTours();  
+            dataGridViewTours.DataSource = bindingSource; 
 
             dataGridViewTours.AutoGenerateColumns = true;
 
@@ -105,55 +105,55 @@ namespace DataGridView.App
             var form = new TourForm();
             if (form.ShowDialog() == DialogResult.OK)
             {
-                _tourService.AddTour(form.Tour);  
+                tourServices.AddTour(form.Tour);  
                 RefreshData();
             }
         }
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
-            if (_bindingSource.Current == null) 
+            if (bindingSource.Current == null) 
             {
                 MessageBox.Show("Выберите тур для редактирования", "Информация",
                               MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
-            var tour = (Tour)_bindingSource.Current;  
+            var tour = (Tour)bindingSource.Current;  
             var form = new TourForm(tour.Clone());
             if (form.ShowDialog() == DialogResult.OK)
             {
-                _tourService.UpdateTour(form.Tour);  
+                tourServices.UpdateTour(form.Tour);  
                 RefreshData();
             }
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            if (_bindingSource.Current == null) 
+            if (bindingSource.Current == null) 
             {
                 MessageBox.Show("Выберите тур для удаления", "Информация",
                               MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
-            var tour = (Tour)_bindingSource.Current;  
+            var tour = (Tour)bindingSource.Current;  
             var result = MessageBox.Show($"Удалить тур в {tour.Direction}?", "Подтверждение удаления",
                                        MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (result == DialogResult.Yes)
             {
-                _tourService.DeleteTour(tour.Id); 
+                tourServices.DeleteTour(tour.Id); 
                 RefreshData();
             }
         }
 
         private void RefreshStats()
         {
-            labelTotalTours.Text = $"Всего туров: {_tourService.GetTotalTours()}"; 
-            labelTotalCost.Text = $"Общая сумма: {_tourService.GetTotalCost():C}";  
-            labelToursWithSurcharges.Text = $"Туров с доплатами: {_tourService.GetToursWithSurcharges()}";  
-            labelTotalSurcharges.Text = $"Общая сумма доплат: {_tourService.GetTotalSurcharges():C}"; 
+            labelTotalTours.Text = $"Всего туров: {tourServices.GetTotalTours()}"; 
+            labelTotalCost.Text = $"Общая сумма: {tourServices.GetTotalCost():C}";  
+            labelToursWithSurcharges.Text = $"Туров с доплатами: {tourServices.GetToursWithSurcharges()}";  
+            labelTotalSurcharges.Text = $"Общая сумма доплат: {tourServices.GetTotalSurcharges():C}"; 
         }
     }
 }

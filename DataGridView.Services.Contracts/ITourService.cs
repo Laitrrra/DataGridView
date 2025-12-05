@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using DataGridView.Entities;
 
-namespace DataGridView.Services
+namespace DataGridView.Services.Contracts
 {
     /// <summary>
     /// Интерфейс сервиса для работы с турами
@@ -29,23 +29,8 @@ namespace DataGridView.Services
         void DeleteTour(int id);
 
         /// <summary>
-        /// Общее количество туров
+        /// Получить статистику по турам
         /// </summary>
-        int GetTotalTours();
-
-        /// <summary>
-        /// Общая стоимость всех туров
-        /// </summary>
-        decimal GetTotalCost();
-
-        /// <summary>
-        /// Количество туров с доплатами
-        /// </summary>
-        int GetToursWithSurcharges();
-
-        /// <summary>
-        /// Общая сумма доплат
-        /// </summary>
-        decimal GetTotalSurcharges();
+        TourStatistics GetStatistics();
     }
 }
