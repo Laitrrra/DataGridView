@@ -29,8 +29,23 @@ namespace DataGridView.Services.Contracts
         void DeleteTour(int id);
 
         /// <summary>
-        /// Получить статистику по турам
+        /// Общее количество туров
         /// </summary>
-        TourStatistics GetStatistics();
+        int GetTotalTours();
+
+        /// <summary>
+        /// Общая стоимость всех туров
+        /// </summary>
+        decimal GetTotalCost();
+
+        /// <summary>
+        /// Количество туров с доплатами
+        /// </summary>
+        int GetToursWithSurcharges();
+
+        /// <summary>
+        /// Общая сумма доплат
+        /// </summary>
+        decimal GetTotalSurcharges();
     }
 }

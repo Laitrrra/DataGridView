@@ -1,69 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using DataGridView.Entities;
+﻿using DataGridView.Entities;
 using DataGridView.Services.Contracts;
 
-namespace DataGridView.Services
+public class InMemoryTourService : ITourService
 {
-    /// <summary>
-    /// In-memory реализация сервиса для работы с турами
-    /// </summary>
-    public class InMemoryTourService : ITourService
+    private readonly List<Tour> tours = new();
+    private int nextId = 1;
+
+    public IReadOnlyList<Tour> GetAllTours() => tours.AsReadOnly();
+
+    public void AddTour(Tour tour)
     {
-        private readonly List<Tour> tours = new();
-        private int nextId = 1;
+        tour.Id = nextId++;
+        tours.Add(tour);
+    }
 
-        public IReadOnlyList<Tour> GetAllTours()
+    public void UpdateTour(Tour tour)
+    {
+        var existing = tours.FirstOrDefault(t => t.Id == tour.Id);
+        if (existing != null)
         {
-            return tours.AsReadOnly();
-        }
-
-        public void AddTour(Tour tour)
-        {
-            if (tour == null)
-            {
-                throw new ArgumentNullException(nameof(tour));
-            }
-
-            tour.Id = nextId++;
-            tours.Add(tour);
-        }
-
-        public void UpdateTour(Tour tour)
-        {
-            if (tour == null)
-            {
-                throw new ArgumentNullException(nameof(tour));
-            }
-
-            var existingTour = tours.FirstOrDefault(t => t.Id == tour.Id);
-            if (existingTour != null)
-            {
-                existingTour.Direction = tour.Direction;
-                existingTour.DepartureDate = tour.DepartureDate;
-                existingTour.Nights = tour.Nights;
-                existingTour.PricePerPerson = tour.PricePerPerson;
-                existingTour.NumberOfPeople = tour.NumberOfPeople;
-                existingTour.HasWiFi = tour.HasWiFi;
-                existingTour.Surcharges = tour.Surcharges;
-            }
-        }
-
-        public void DeleteTour(int id)
-        {
-            tours.RemoveAll(t => t.Id == id);
-        }
-
-        public TourStatistics GetStatistics()
-        {
-            return new TourStatistics
-            {
-                TotalTours = tours.Count,
-                TotalCost = tours.Sum(t => (t.PricePerPerson * t.NumberOfPeople) + t.Surcharges),
-                ToursWithSurcharges = tours.Count(t => t.Surcharges > 0),
-                TotalSurcharges = tours.Sum(t => t.Surcharges)
-            };
+            existing.Direction = tour.Direction;
+            existing.DepartureDate = tour.DepartureDate;
+            existing.Nights = tour.Nights;
+            existing.PricePerPerson = tour.PricePerPerson;
+            existing.NumberOfPeople = tour.NumberOfPeople;
+            existing.HasWiFi = tour.HasWiFi;
+            existing.Surcharges = tour.Surcharges;
         }
     }
+
+    public void DeleteTour(int id)
+    {
+        tours.RemoveAll(t => t.Id == id);
+    }
+
+    public int GetTotalTours() => tours.Count;
+
+    public decimal GetTotalCost() =>
+        tours.Sum(t => (t.PricePerPerson * t.NumberOfPeople) + t.Surcharges);
+
+    public int GetToursWithSurcharges() =>
+        tours.Count(t => t.Surcharges > 0);
+
+    public decimal GetTotalSurcharges() =>
+        tours.Sum(t => t.Surcharges);
 }

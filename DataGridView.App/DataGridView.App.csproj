@@ -11,9 +11,10 @@
 	<ItemGroup>
 	  <PackageReference Include="Laitra.DataGridView" Version="1.0.1" />
 	</ItemGroup>
-
 	<ItemGroup>
-		<ProjectReference Include="..\DataGridView.Services.Contracts\DataGridView.Services.Contracts.csproj" />
+	  <ProjectReference Include="..\DataGridView.Entities\DataGridView.Entities.csproj" />
+	  <ProjectReference Include="..\DataGridView.Services.Contracts\DataGridView.Services.Contracts.csproj" />
+	  <ProjectReference Include="..\DataGridView.Services\DataGridView.Services.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
