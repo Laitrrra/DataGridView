@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageId>Laitra.DataGridView</PackageId>
+		<Title>DataGridView Tour Services</Title>
+		<Authors>Laitra</Authors>
+		<Product>$(AssemblyName)</Product>
+		<Description>DataGridViewProject Крупская Анна ИП 22-3</Description>
+		<Version>1.0.2</Version>
+		<PackageIcon>aga.png</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageTags>tour;management;inmemory;datagridview</PackageTags>
+		<IncludeReferencedProjects>true</IncludeReferencedProjects>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\DataGridView.Services.Contracts\DataGridView.Services.Contracts.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="README.md" Pack="true" PackagePath="\" />
+		<None Include="aga.png" Pack="true" PackagePath="\" />
+	</ItemGroup>
+</Project>
