@@ -10,7 +10,6 @@ namespace DataGridView.App
         {
             ApplicationConfiguration.Initialize();
 
-            // Создаем сервис и добавляем тестовые данные
             ITourService tourService = new InMemoryTourService();
             AddTestData(tourService);
 

@@ -32,20 +32,20 @@ namespace DataGridView.App
             dataGridViewTours.AutoGenerateColumns = true;
 
             dataGridViewTours.Columns["Id"].Visible = false;
-            dataGridViewTours.Columns["Direction"].HeaderText = "Направление";
-            dataGridViewTours.Columns["DepartureDate"].HeaderText = "Дата вылета";
-            dataGridViewTours.Columns["Nights"].HeaderText = "Ночей";
-            dataGridViewTours.Columns["PricePerPerson"].HeaderText = "Стоимость за отдыхающего";
-            dataGridViewTours.Columns["NumberOfPeople"].HeaderText = "Количество отдыхающих";
+            dataGridViewTours.Columns["Direction"].HeaderText = "РќР°РїСЂР°РІР»РµРЅРёРµ";
+            dataGridViewTours.Columns["DepartureDate"].HeaderText = "Р”Р°С‚Р° РІС‹Р»РµС‚Р°";
+            dataGridViewTours.Columns["Nights"].HeaderText = "РќРѕС‡РµР№";
+            dataGridViewTours.Columns["PricePerPerson"].HeaderText = "РЎС‚РѕРёРјРѕСЃС‚СЊ Р·Р° РѕС‚РґС‹С…Р°СЋС‰РµРіРѕ";
+            dataGridViewTours.Columns["NumberOfPeople"].HeaderText = "РљРѕР»РёС‡РµСЃС‚РІРѕ РѕС‚РґС‹С…Р°СЋС‰РёС…";
             dataGridViewTours.Columns["HasWiFi"].HeaderText = "Wi-Fi";
-            dataGridViewTours.Columns["Surcharges"].HeaderText = "Доплаты";
+            dataGridViewTours.Columns["Surcharges"].HeaderText = "Р”РѕРїР»Р°С‚С‹";
 
             dataGridViewTours.Columns["DepartureDate"].DefaultCellStyle.Format = "dd.MM.yyyy";
 
             var totalCostColumn = new DataGridViewTextBoxColumn()
             {
                 Name = "TotalCost",
-                HeaderText = "Общая стоимость",
+                HeaderText = "РћР±С‰Р°СЏ СЃС‚РѕРёРјРѕСЃС‚СЊ",
                 Width = 120
             };
             dataGridViewTours.Columns.Add(totalCostColumn);
@@ -75,11 +75,11 @@ namespace DataGridView.App
             {
                 e.Value = tour.Direction switch
                 {
-                    Direction.Turkey => "Турция",
-                    Direction.Spain => "Испания",
-                    Direction.Italy => "Италия",
-                    Direction.France => "Франция",
-                    Direction.Shushary => "Шушары",
+                    Direction.Turkey => "РўСѓСЂС†РёСЏ",
+                    Direction.Spain => "РСЃРїР°РЅРёСЏ",
+                    Direction.Italy => "РС‚Р°Р»РёСЏ",
+                    Direction.France => "Р¤СЂР°РЅС†РёСЏ",
+                    Direction.Shushary => "РЁСѓС€Р°СЂС‹",
                     _ => tour.Direction.ToString()
                 };
                 e.FormattingApplied = true;
@@ -115,7 +115,7 @@ namespace DataGridView.App
         {
             if (bindingSource.Current == null) 
             {
-                MessageBox.Show("Выберите тур для редактирования", "Информация",
+                MessageBox.Show("Р’С‹Р±РµСЂРёС‚Рµ С‚СѓСЂ РґР»СЏ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ", "РРЅС„РѕСЂРјР°С†РёСЏ",
                               MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
@@ -133,13 +133,13 @@ namespace DataGridView.App
         {
             if (bindingSource.Current == null) 
             {
-                MessageBox.Show("Выберите тур для удаления", "Информация",
+                MessageBox.Show("Р’С‹Р±РµСЂРёС‚Рµ С‚СѓСЂ РґР»СЏ СѓРґР°Р»РµРЅРёСЏ", "РРЅС„РѕСЂРјР°С†РёСЏ",
                               MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
             var tour = (Tour)bindingSource.Current;  
-            var result = MessageBox.Show($"Удалить тур в {tour.Direction}?", "Подтверждение удаления",
+            var result = MessageBox.Show($"РЈРґР°Р»РёС‚СЊ С‚СѓСЂ РІ {tour.Direction}?", "РџРѕРґС‚РІРµСЂР¶РґРµРЅРёРµ СѓРґР°Р»РµРЅРёСЏ",
                                        MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (result == DialogResult.Yes)
@@ -151,10 +151,10 @@ namespace DataGridView.App
 
         private void RefreshStats()
         {
-            labelTotalTours.Text = $"Всего туров: {tourServices.GetTotalTours()}"; 
-            labelTotalCost.Text = $"Общая сумма: {tourServices.GetTotalCost():C}";  
-            labelToursWithSurcharges.Text = $"Туров с доплатами: {tourServices.GetToursWithSurcharges()}";  
-            labelTotalSurcharges.Text = $"Общая сумма доплат: {tourServices.GetTotalSurcharges():C}"; 
+            labelTotalTours.Text = $"Р’СЃРµРіРѕ С‚СѓСЂРѕРІ: {tourServices.GetTotalTours()}"; 
+            labelTotalCost.Text = $"РћР±С‰Р°СЏ СЃСѓРјРјР°: {tourServices.GetTotalCost():C}";  
+            labelToursWithSurcharges.Text = $"РўСѓСЂРѕРІ СЃ РґРѕРїР»Р°С‚Р°РјРё: {tourServices.GetToursWithSurcharges()}";  
+            labelTotalSurcharges.Text = $"РћР±С‰Р°СЏ СЃСѓРјРјР° РґРѕРїР»Р°С‚: {tourServices.GetTotalSurcharges():C}"; 
         }
     }
 }
